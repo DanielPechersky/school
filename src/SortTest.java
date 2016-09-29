@@ -1,4 +1,4 @@
-import Sorts.QuickSort;
+import sorts.QuickSort;
 
 public class SortTest {
     public static void main(String[] args) {

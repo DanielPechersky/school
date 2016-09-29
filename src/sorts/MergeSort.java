@@ -1,4 +1,4 @@
-package Sorts;
+package sorts;
 
 public class MergeSort {
     public static void sort(int[] data) {
