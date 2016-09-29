@@ -1,3 +1,4 @@
+import sorts.MergeSort;
 import sorts.QuickSort;
 
 public class SortTest {
@@ -21,6 +22,12 @@ public class SortTest {
     public static void quickSortTest() {
         createArray();
         QuickSort.sort(data);
+        printArray();
+    }
+
+    public static void mergeSortTest() {
+        createArray();
+        MergeSort.sort(data);
         printArray();
     }
 
