@@ -1,8 +1,6 @@
 import sorts.MergeSort;
 import sorts.QuickSort;
 
-import static com.oracle.javafx.jmx.json.JSONDocument.createArray;
-
 public class SortTest {
     private static int[] array = new int[10];
 
@@ -25,7 +23,7 @@ public class SortTest {
     }
 
     public static void mergeSortTest() {
-        createArray();
+        fillArray();
         printArray();
         MergeSort.sort(array);
         printArray();
