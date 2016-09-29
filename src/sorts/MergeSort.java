@@ -1,11 +1,11 @@
 package sorts;
 
 public class MergeSort {
-    public static void sort(int[] data) {
-        sort(data, 0, data.length);
+    public static void sort(int[] array) {
+        sort(array, 0, array.length);
     }
 
-    public static void sort(int[] data, int fromIndex, int toIndex) {
+    public static void sort(int[] array, int fromIndex, int toIndex) {
         int dataLength = toIndex-fromIndex;
         if (dataLength > 1) {
             int leftListStart = fromIndex;
@@ -14,17 +14,17 @@ public class MergeSort {
             int rightListStart = leftListEnd;
             int rightListEnd = toIndex;
 
-            sort(data, leftListStart, leftListEnd);
-            sort(data, rightListStart, rightListEnd);
+            sort(array, leftListStart, leftListEnd);
+            sort(array, rightListStart, rightListEnd);
 
-            int[] unsortedData = data.clone();
+            int[] unsortedData = array.clone();
 
             for (int dataIndex = fromIndex, leftListIndex = leftListStart, rightListIndex = rightListStart; dataIndex < dataLength; dataIndex++)
                 if (leftListIndex < leftListEnd && (rightListIndex >= rightListEnd || unsortedData[leftListIndex] < unsortedData[rightListIndex])) {
-                    data[dataIndex] = unsortedData[leftListIndex];
+                    array[dataIndex] = unsortedData[leftListIndex];
                     leftListIndex++;
                 } else {
-                    data[dataIndex] = unsortedData[rightListIndex];
+                    array[dataIndex] = unsortedData[rightListIndex];
                     rightListIndex++;
                 }
         }
