@@ -10,9 +10,10 @@ public class SortTest {
     }
 
     private static void printArray() {
+        String arrayString = "";
         for (int num : array)
-            System.out.println(num);
-        System.out.println();
+            arrayString = arrayString.concat(String.valueOf(num) + ",");
+        System.out.println(arrayString.substring(0, arrayString.length()-1));
     }
 
     public static void quickSortTest() {
