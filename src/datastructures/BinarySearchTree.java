@@ -24,6 +24,20 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return sortedList;
     }
 
+    private BinarySearchTreeNode<E> findPlace(E data) {
+        BinarySearchTreeNode<E> current = null;
+        BinarySearchTreeNode<E> next = root;
+
+        while (next != null) {
+            current = next;
+            if (data.compareTo(current.getData()) == -1)
+                next = current.getLeft();
+            else
+                next = current.getRight();
+        }
+        return current;
+    }
+
     private BinarySearchTreeNode<E> getParent(E childData) {
         BinarySearchTreeNode<E> parent = null;
         BinarySearchTreeNode<E> current = root;
@@ -59,20 +73,12 @@ public class BinarySearchTree<E extends Comparable<E>> {
     private void insertWithoutBalancing(E data) {
         BinarySearchTreeNode<E> toInsert = new BinarySearchTreeNode<>(data);
         if (root != null) {
-            BinarySearchTreeNode<E> current = null;
-            BinarySearchTreeNode<E> next = root;
+            BinarySearchTreeNode<E> parent = findPlace(data);
 
-            while (next != null) {
-                current = next;
-                if (toInsert.compareTo(next) == -1)
-                    next = current.getLeft();
-                else
-                    next = current.getRight();
-            }
-            if (toInsert.compareTo(current) == -1)
-                current.setLeft(toInsert);
+            if (toInsert.compareTo(parent) == -1)
+                parent.setLeft(toInsert);
             else
-                current.setRight(toInsert);
+                parent.setRight(toInsert);
         } else
             root = toInsert;
     }
@@ -102,7 +108,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                 if (root.getLeft() != null) {
                     root = toDelete.getLeft();
                     if (root.getRight() != null)
-                        insert(getSortedList(toDelete.getRight()));
+                        insertWithoutBalancing(getSortedList(toDelete.getRight()));
 
                 } else if (root.getRight() != null)
                     root = toDelete.getRight();
@@ -116,7 +122,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                     if (toDelete.getLeft() != null) {
                         parent.setLeft(toDelete.getLeft());
                         if (toDelete.getRight() != null)
-                            insert(getSortedList(toDelete.getRight()));
+                            insertWithoutBalancing(getSortedList(toDelete.getRight()));
                     } else if (toDelete.getRight() != null)
                         parent.setLeft(toDelete.getRight());
                     else
@@ -126,7 +132,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                     if (toDelete.getLeft() != null) {
                         parent.setRight(toDelete.getLeft());
                         if (toDelete.getRight() != null)
-                            insert(getSortedList(toDelete.getRight()));
+                            insertWithoutBalancing(getSortedList(toDelete.getRight()));
                     } else if (toDelete.getRight() != null)
                         parent.setRight(toDelete.getRight());
                     else
