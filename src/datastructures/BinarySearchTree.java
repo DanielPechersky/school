@@ -14,23 +14,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         insert(data);
     }
 
-    private static <E extends Comparable<E>> void insert(Iterable<BinarySearchTreeNode<E>> toInsert, BinarySearchTreeNode<E> insertIn) {
-        for (BinarySearchTreeNode<E> node : toInsert)
-            insert(node, insertIn);
-    }
-
-    private static <E extends Comparable<E>> void insert(BinarySearchTreeNode<E> toInsert, BinarySearchTreeNode<E> insertIn) {
-        if (toInsert.compareTo(insertIn) == -1)
-            if (insertIn.getLeft() != null)
-                insert(toInsert, insertIn.getLeft());
-            else
-                insertIn.setLeft(toInsert);
-        else if (insertIn.getRight() != null)
-            insert(toInsert, insertIn.getRight());
-        else
-            insertIn.setRight(toInsert);
-    }
-
     private static <E extends Comparable<E>> LinkedList<BinarySearchTreeNode<E>> getSortedNodeList(BinarySearchTreeNode<E> node) {
         LinkedList<BinarySearchTreeNode<E>> sortedList = new LinkedList<>();
         if (node.getLeft() != null)
@@ -51,22 +34,25 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return sortedList;
     }
 
-    private static <E extends Comparable<E>> BinarySearchTreeNode<E> getParent(E childData, BinarySearchTreeNode<E> searchIn) {
-        if (childData.compareTo(searchIn.getData()) == -1) {
-            if (searchIn.getLeft() == null)
+    private BinarySearchTreeNode<E> getParent(E childData) {
+        BinarySearchTreeNode<E> parent = null;
+        BinarySearchTreeNode<E> current = root;
+
+        while (!childData.equals(current.getData())) {
+            parent = current;
+            if (childData.compareTo(current.getData()) == -1)
+                current = current.getLeft();
+            else
+                current = current.getRight();
+
+            if (current == null)
                 return null;
-            else if (!searchIn.getLeft().getData().equals(childData))
-                return getParent(childData, searchIn.getLeft());
-        } else if (searchIn.getRight() == null)
-            return null;
-        else if (!searchIn.getRight().getData().equals(childData))
-            return getParent(childData, searchIn.getRight());
-        return searchIn;
+        }
+        return parent;
     }
 
     public void insert(Iterable<E> data) {
-        for (E d : data)
-            insertWithoutBalancing(d);
+        insertWithoutBalancing(data);
         balance();
     }
 
@@ -75,12 +61,37 @@ public class BinarySearchTree<E extends Comparable<E>> {
         balance();
     }
 
+    private void insertWithoutBalancing(Iterable<E> data) {
+        for (E d : data)
+            insertWithoutBalancing(d);
+    }
+
     private void insertWithoutBalancing(E data) {
         BinarySearchTreeNode<E> toInsert = new BinarySearchTreeNode<>(data);
-        if (root != null)
-            insert(toInsert, root);
-        else
+        if (root != null) {
+            BinarySearchTreeNode<E> current = null;
+            BinarySearchTreeNode<E> next = root;
+
+            while (next != null) {
+                current = next;
+                if (toInsert.compareTo(next) == -1)
+                    next = current.getLeft();
+                else
+                    next = current.getRight();
+            }
+            if (toInsert.compareTo(current) == -1)
+                current.setLeft(toInsert);
+            else
+                current.setRight(toInsert);
+        } else
             root = toInsert;
+    }
+
+    private static <E extends Comparable<E>> LinkedList<E> nodesToData(Iterable<BinarySearchTreeNode<E>> nodes) {
+        LinkedList<E> data = new LinkedList<>();
+        for (BinarySearchTreeNode<E> node : nodes)
+            data.add(node.getData());
+        return data;
     }
 
     public LinkedList<E> getSortedList() {
@@ -108,21 +119,21 @@ public class BinarySearchTree<E extends Comparable<E>> {
                 if (root.getLeft() != null) {
                     root = toDelete.getLeft();
                     if (root.getRight() != null)
-                        insert(getSortedNodeList(toDelete.getRight()), root);
+                        insert(getSortedList(toDelete.getRight()));
 
                 } else if (root.getRight() != null)
                     root = toDelete.getRight();
                 else
                     root = null;
             } else {
-                BinarySearchTreeNode<E> parent = getParent(data, root);
+                BinarySearchTreeNode<E> parent = getParent(data);
 
                 if (data.compareTo(parent.getData()) == -1) {
                     BinarySearchTreeNode<E> toDelete = parent.getLeft();
                     if (toDelete.getLeft() != null) {
                         parent.setLeft(toDelete.getLeft());
                         if (toDelete.getRight() != null)
-                            insert(getSortedNodeList(toDelete.getRight()), parent.getLeft());
+                            insert(getSortedList(toDelete.getRight()));
                     } else if (toDelete.getRight() != null)
                         parent.setLeft(toDelete.getRight());
                     else
@@ -132,7 +143,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                     if (toDelete.getLeft() != null) {
                         parent.setRight(toDelete.getLeft());
                         if (toDelete.getRight() != null)
-                            insert(getSortedNodeList(toDelete.getRight()), parent.getRight());
+                            insert(getSortedList(toDelete.getRight()));
                     } else if (toDelete.getRight() != null)
                         parent.setRight(toDelete.getRight());
                     else
@@ -142,14 +153,13 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
     }
 
-    // TODO:
     public void balance() {
         // get center, split list, get centers, split lists, stop splitting if lists are length 1
         if (root != null) {
-            ArrayList<BinarySearchTreeNode<E>> list = new ArrayList<>(getSortedNodeList(root));
-            root = list.remove(list.size()/2);
+            ArrayList<E> list = new ArrayList<>(getSortedList(root));
+            root = new BinarySearchTreeNode<>(list.remove(list.size()/2));
 
-            Queue<ArrayList<BinarySearchTreeNode<E>>> splitLists = new LinkedList<>();
+            Queue<ArrayList<E>> splitLists = new LinkedList<>();
 
             if (list.size() > 0) {
                 splitLists.add(new ArrayList<>(list.subList(list.size()/2, list.size())));
@@ -160,10 +170,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
             while (splitLists.size() > 0) {
                 list = splitLists.remove();
-                insert(list.remove(list.size()/2), root);
+                insertWithoutBalancing(list.remove(list.size()/2));
 
                 if (list.size() <= 2) {
-                    insert(list, root);
+                    insertWithoutBalancing(list);
                 } else {
                     splitLists.add(new ArrayList<>(list.subList(0, list.size()/2+1)));
                     splitLists.add(new ArrayList<>(list.subList(list.size()/2+1, list.size())));
