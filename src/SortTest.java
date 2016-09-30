@@ -31,6 +31,9 @@ public class SortTest {
     }
 
     public static void main(String[] args) {
-        mergeSortTest();
+        if (args[0].equals("merge"))
+            mergeSortTest();
+        else if (args[0].equals("quick"))
+            quickSortTest();
     }
 }
