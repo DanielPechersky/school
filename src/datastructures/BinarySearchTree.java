@@ -34,6 +34,13 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return sortedList;
     }
 
+    private static <E extends Comparable<E>> LinkedList<E> nodesToData(Iterable<BinarySearchTreeNode<E>> nodes) {
+        LinkedList<E> data = new LinkedList<>();
+        for (BinarySearchTreeNode<E> node : nodes)
+            data.add(node.getData());
+        return data;
+    }
+
     private BinarySearchTreeNode<E> getParent(E childData) {
         BinarySearchTreeNode<E> parent = null;
         BinarySearchTreeNode<E> current = root;
@@ -85,13 +92,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
                 current.setRight(toInsert);
         } else
             root = toInsert;
-    }
-
-    private static <E extends Comparable<E>> LinkedList<E> nodesToData(Iterable<BinarySearchTreeNode<E>> nodes) {
-        LinkedList<E> data = new LinkedList<>();
-        for (BinarySearchTreeNode<E> node : nodes)
-            data.add(node.getData());
-        return data;
     }
 
     public LinkedList<E> getSortedList() {
