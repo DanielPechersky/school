@@ -14,16 +14,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         insert(data);
     }
 
-    private static <E extends Comparable<E>> LinkedList<BinarySearchTreeNode<E>> getSortedNodeList(BinarySearchTreeNode<E> node) {
-        LinkedList<BinarySearchTreeNode<E>> sortedList = new LinkedList<>();
-        if (node.getLeft() != null)
-            sortedList.addAll(getSortedNodeList(node.getLeft()));
-        sortedList.add(new BinarySearchTreeNode<>(node.getData()));
-        if (node.getRight() != null)
-            sortedList.addAll(getSortedNodeList(node.getRight()));
-        return sortedList;
-    }
-
     private static <E extends Comparable<E>> LinkedList<E> getSortedList(BinarySearchTreeNode<E> node) {
         LinkedList<E> sortedList = new LinkedList<>();
         if (node.getLeft() != null)
@@ -32,13 +22,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         if (node.getRight() != null)
             sortedList.addAll(getSortedList(node.getRight()));
         return sortedList;
-    }
-
-    private static <E extends Comparable<E>> LinkedList<E> nodesToData(Iterable<BinarySearchTreeNode<E>> nodes) {
-        LinkedList<E> data = new LinkedList<>();
-        for (BinarySearchTreeNode<E> node : nodes)
-            data.add(node.getData());
-        return data;
     }
 
     private BinarySearchTreeNode<E> getParent(E childData) {
