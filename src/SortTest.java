@@ -31,6 +31,7 @@ public class SortTest {
     }
 
     public static void main(String[] args) {
+        // sort being tested is determined through args[0]
         if (args[0].equals("merge"))
             mergeSortTest();
         else if (args[0].equals("quick"))

@@ -14,6 +14,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         insert(data);
     }
 
+    // get a sorted list of data from a node and all it's children
     private static <E extends Comparable<E>> LinkedList<E> getSortedList(BinarySearchTreeNode<E> node) {
         LinkedList<E> sortedList = new LinkedList<>();
         if (node.getLeft() != null)
@@ -24,6 +25,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return sortedList;
     }
 
+    // find the node that data should be a child of
     private BinarySearchTreeNode<E> findPlace(E data) {
         BinarySearchTreeNode<E> current = null;
         BinarySearchTreeNode<E> next = root;
@@ -38,6 +40,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return current;
     }
 
+    // get the parent of the node with the data passed in
     private BinarySearchTreeNode<E> getParent(E childData) {
         BinarySearchTreeNode<E> parent = null;
         BinarySearchTreeNode<E> current = root;
@@ -102,6 +105,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
     private void deleteWithoutBalancing(E data) {
         if (root != null) {
+            // if root is to be deleted
             if (root.getData().equals(data)) {
                 BinarySearchTreeNode<E> toDelete = root;
 
