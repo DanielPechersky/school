@@ -19,7 +19,7 @@ public class MergeSort {
 
             int[] unsortedData = array.clone();
 
-            for (int dataIndex = fromIndex, leftListIndex = leftListStart, rightListIndex = rightListStart; dataIndex < dataLength; dataIndex++)
+            for (int dataIndex = fromIndex, leftListIndex = leftListStart, rightListIndex = rightListStart; dataIndex < toIndex; dataIndex++)
                 if (leftListIndex < leftListEnd && (rightListIndex >= rightListEnd || unsortedData[leftListIndex] < unsortedData[rightListIndex])) {
                     array[dataIndex] = unsortedData[leftListIndex];
                     leftListIndex++;
