@@ -19,7 +19,6 @@ public class BinarySearchTreeTest {
             tree.delete(55);
             System.out.println(tree);
             System.out.println(tree.getSortedList());
-
         }
     }
 }
