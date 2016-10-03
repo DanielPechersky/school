@@ -12,7 +12,7 @@ public class SortTest {
     private static void printArray() {
         String arrayString = "";
         for (int num : array)
-            arrayString = arrayString.concat(String.valueOf(num) + ",");
+            arrayString = arrayString.concat(String.valueOf(num)+",");
         System.out.println(arrayString.substring(0, arrayString.length()-1));
     }
 
