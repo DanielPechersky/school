@@ -9,6 +9,8 @@ class BinarySearchTreeNode<E extends Comparable<E>> extends Node<E> implements C
         right = null;
     }
 
+    E getData() { return super.getData(); }
+
     BinarySearchTreeNode<E> getLeft() { return left; }
 
     void setLeft(BinarySearchTreeNode<E> left) { this.left = left; }

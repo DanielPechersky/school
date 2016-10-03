@@ -7,5 +7,5 @@ abstract class Node<E> {
 
     E getData() { return data; }
 
-    void setData(E data) { this.data = data; }
+    private void setData(E data) { this.data = data; }
 }
