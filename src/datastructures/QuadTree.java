@@ -1,9 +1,11 @@
 package datastructures;
 
 public class QuadTree<E> {
+    private int size;
     private QuadTreeNode<E> root;
 
     public QuadTree(E[][] data) {
+        size = data.length;
         root = build(data);
     }
 
