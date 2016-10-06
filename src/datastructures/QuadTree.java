@@ -18,11 +18,33 @@ public class QuadTree<E> {
         int centerRowIndex = fromRowIndex+(toRowIndex-fromRowIndex)/2;
         int centerColumnIndex = fromColumnIndex+(toColumnIndex-fromColumnIndex)/2;
 
-        return new QuadTreeNode<>(
+        QuadTreeNode<E> result = new QuadTreeNode<>(
                 build(data, fromRowIndex, centerRowIndex, fromColumnIndex, centerColumnIndex),
                 build(data, fromRowIndex, centerRowIndex, centerColumnIndex, toColumnIndex),
                 build(data, centerRowIndex, toRowIndex, centerColumnIndex, toColumnIndex),
                 build(data, centerRowIndex, toRowIndex, fromColumnIndex, centerColumnIndex));
+
+        killChildrenIfNecessary(result);
+        return result;
+    }
+
+    private static <E> void killChildrenIfNecessary(QuadTreeNode<E> node) {
+        if (areChildrenIdentical(node))
+            killChildren(node);
+    }
+
+    private static <E> boolean areChildrenIdentical(QuadTreeNode<E> node) {
+        QuadTreeNode<E>[] children = node.getChildren();
+
+        for (int i = 0; i < children.length-1; i++)
+            if (!children[i].equals(children[i+1]))
+                return false;
+        return true;
+    }
+
+    private static <E> void killChildren(QuadTreeNode<E> node) {
+        node.setData(node.getChildren()[0].getData());
+        node.setChildren(null, null, null, null);
     }
 
     public String toString() {
