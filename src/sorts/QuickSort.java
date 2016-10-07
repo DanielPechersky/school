@@ -12,7 +12,7 @@ public class QuickSort {
         // pivot will always either be equal to left or right, which can be expressed with boolean
         // having pivot as a boolean also means pivot does not have to be set when positions are switched
         boolean pivotIsLeft = true;
-        
+
         while (left != right) {
             if (array[left] > array[right]) {
                 int temp = array[left];

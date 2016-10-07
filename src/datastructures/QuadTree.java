@@ -9,7 +9,7 @@ public class QuadTree<E> {
     public QuadTree(E[][] data) {
         if (data.length != data[0].length)
             throw new IllegalArgumentException("QuadTree needs an array with equal sides");
-        if ((data.length & -data.length) != data[0].length || (data[0].length & -data[0].length) != data[0].length)
+        if ((data.length&-data.length) != data[0].length || (data[0].length&-data[0].length) != data[0].length)
             throw new IllegalArgumentException("Sides must be power of 2");
 
         size = data.length;
@@ -56,14 +56,6 @@ public class QuadTree<E> {
         node.clearChildren();
     }
 
-    public Object[][] toArray() {
-        Object[][] array = new Object[size][size];
-        fillArray(array);
-        return array;
-    }
-
-    public void fillArray(Object[][] array) { fillArray(array, root, size); }
-
     private static void fillArray(Object[][] array, QuadTreeNode node, int size) {
         fillArray(array, node, size, 0, 0);
     }
@@ -75,16 +67,26 @@ public class QuadTree<E> {
             QuadTreeNode[] children = node.getChildren();
             int subSquareSize = size/2;
             fillArray(array, children[0], subSquareSize, fromRowIndex, fromColumnIndex);
-            fillArray(array, children[1], subSquareSize, fromRowIndex, fromColumnIndex + subSquareSize);
-            fillArray(array, children[2], subSquareSize, fromRowIndex + subSquareSize, fromColumnIndex + subSquareSize);
-            fillArray(array, children[3], subSquareSize, fromRowIndex + subSquareSize, fromColumnIndex);
+            fillArray(array, children[1], subSquareSize, fromRowIndex, fromColumnIndex+subSquareSize);
+            fillArray(array, children[2], subSquareSize, fromRowIndex+subSquareSize, fromColumnIndex+subSquareSize);
+            fillArray(array, children[3], subSquareSize, fromRowIndex+subSquareSize, fromColumnIndex);
         }
     }
 
     private static void fillSquare(Object[][] array, Object value, int size, int fromRowIndex, int fromColumnIndex) {
-        for (int row = fromRowIndex; row < fromRowIndex + size; row++)
-            Arrays.fill(array[row], fromColumnIndex, fromColumnIndex + size, value);
+        for (int row = fromRowIndex; row < fromRowIndex+size; row++)
+            Arrays.fill(array[row], fromColumnIndex, fromColumnIndex+size, value);
 
+    }
+
+    public Object[][] toArray() {
+        Object[][] array = new Object[size][size];
+        fillArray(array);
+        return array;
+    }
+
+    public void fillArray(Object[][] array) {
+        fillArray(array, root, size);
     }
 
     public String toString() {

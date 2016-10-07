@@ -28,7 +28,7 @@ public class QuadTreeTest {
 
         for (Boolean[] row : array) {
             for (Boolean bool : row)
-                System.out.print(bool + " ");
+                System.out.print(bool+" ");
             System.out.println();
         }
     }
