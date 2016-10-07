@@ -5,6 +5,11 @@ public class QuadTree<E> {
     private QuadTreeNode<E> root;
 
     public QuadTree(E[][] data) {
+        if (data.length != data[0].length)
+            throw new IllegalArgumentException("QuadTree needs an array with equal sides");
+        if ((data.length & -data.length) != data[0].length || (data[0].length & -data[0].length) != data[0].length)
+            throw new IllegalArgumentException("Sides must be power of 2");
+
         size = data.length;
         root = build(data);
     }
