@@ -1,5 +1,7 @@
 package datastructures;
 
+import java.util.Arrays;
+
 public class QuadTree<E> {
     private int size;
     private QuadTreeNode<E> root;
@@ -14,11 +16,11 @@ public class QuadTree<E> {
         root = build(data);
     }
 
-    private QuadTreeNode<E> build(E[][] data) {
+    private static <E> QuadTreeNode<E> build(E[][] data) {
         return build(data, 0, data.length, 0, data[0].length);
     }
 
-    private QuadTreeNode<E> build(E[][] data, int fromRowIndex, int toRowIndex, int fromColumnIndex, int toColumnIndex) {
+    private static <E> QuadTreeNode<E> build(E[][] data, int fromRowIndex, int toRowIndex, int fromColumnIndex, int toColumnIndex) {
         if (toRowIndex-fromRowIndex == 1)
             return new QuadTreeNode<>(data[fromRowIndex][fromColumnIndex]);
 
@@ -51,7 +53,38 @@ public class QuadTree<E> {
 
     private static <E> void killChildren(QuadTreeNode<E> node) {
         node.setData(node.getChildren()[0].getData());
-        node.setChildren(null, null, null, null);
+        node.clearChildren();
+    }
+
+    public Object[][] toArray() {
+        Object[][] array = new Object[size][size];
+        fillArray(array);
+        return array;
+    }
+
+    public void fillArray(Object[][] array) { fillArray(array, root, size); }
+
+    private static void fillArray(Object[][] array, QuadTreeNode node, int size) {
+        fillArray(array, node, size, 0, 0);
+    }
+
+    private static void fillArray(Object[][] array, QuadTreeNode node, int size, int fromRowIndex, int fromColumnIndex) {
+        if (node.isLeaf())
+            fillSquare(array, node.getData(), size, fromRowIndex, fromColumnIndex);
+        else {
+            QuadTreeNode[] children = node.getChildren();
+            int subSquareSize = size/2;
+            fillArray(array, children[0], subSquareSize, fromRowIndex, fromColumnIndex);
+            fillArray(array, children[1], subSquareSize, fromRowIndex, fromColumnIndex + subSquareSize);
+            fillArray(array, children[2], subSquareSize, fromRowIndex + subSquareSize, fromColumnIndex + subSquareSize);
+            fillArray(array, children[3], subSquareSize, fromRowIndex + subSquareSize, fromColumnIndex);
+        }
+    }
+
+    private static void fillSquare(Object[][] array, Object value, int size, int fromRowIndex, int fromColumnIndex) {
+        for (int row = fromRowIndex; row < fromRowIndex + size; row++)
+            Arrays.fill(array[row], fromColumnIndex, fromColumnIndex + size, value);
+
     }
 
     public String toString() {

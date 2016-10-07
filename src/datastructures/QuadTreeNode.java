@@ -30,6 +30,10 @@ public class QuadTreeNode<E> extends Node<E> {
     @SuppressWarnings("unchecked")
     private void instantiateChildrenArray() {
         children = (QuadTreeNode<E>[]) new QuadTreeNode[4];
+        clearChildren();
+    }
+
+    void clearChildren() {
         Arrays.fill(children, null);
     }
 

@@ -22,5 +22,14 @@ public class QuadTreeTest {
         QuadTree<Boolean> tree = fromFile("src/quad.dat");
 
         System.out.println(tree.toString());
+
+        Boolean[][] array = new Boolean[8][8];
+        tree.fillArray(array);
+
+        for (Boolean[] row : array) {
+            for (Boolean bool : row)
+                System.out.print(bool + " ");
+            System.out.println();
+        }
     }
 }
