@@ -2,7 +2,7 @@ package datastructures;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 public class BinarySearchTree<E extends Comparable<E>> {
     private BinarySearchTreeNode<E> root;
@@ -150,29 +150,26 @@ public class BinarySearchTree<E extends Comparable<E>> {
         // get center, split list, get centers, split lists, stop splitting if lists are length 1
         if (root != null) {
             ArrayList<E> list = new ArrayList<>(getSortedList(root));
+
             root = new BinarySearchTreeNode<>(list.remove(list.size()/2));
 
-            Queue<ArrayList<E>> splitLists = new LinkedList<>();
-
             if (list.size() > 0) {
-                splitLists.add(new ArrayList<>(list.subList(list.size()/2, list.size())));
+                balance(new ArrayList<>(list.subList(list.size()/2, list.size())));
 
                 if (list.size() > 1)
-                    splitLists.add(new ArrayList<>(list.subList(0, list.size()/2)));
+                    balance(new ArrayList<>(list.subList(0, list.size()/2)));
             }
+        }
+    }
 
-            while (splitLists.size() > 0) {
-                list = splitLists.remove();
-                insertWithoutBalancing(list.remove(list.size()/2));
+    private void balance(List<E> list) {
+        insertWithoutBalancing(list.remove(list.size()/2));
 
-                if (list.size() <= 2) {
-                    insertWithoutBalancing(list);
-                } else {
-                    splitLists.add(new ArrayList<>(list.subList(0, list.size()/2+1)));
-                    splitLists.add(new ArrayList<>(list.subList(list.size()/2+1, list.size())));
-                }
-
-            }
+        if (list.size() <= 2) {
+            insertWithoutBalancing(list);
+        } else {
+            balance(new ArrayList<>(list.subList(0, list.size()/2)));
+            balance(new ArrayList<>(list.subList(list.size()/2, list.size())));
         }
     }
 
