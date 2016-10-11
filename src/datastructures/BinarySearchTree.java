@@ -25,23 +25,21 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return sortedList;
     }
 
-    // find the node that data should be a child of
-    private BinarySearchTreeNode<E> findPlace(E data) {
-        BinarySearchTreeNode<E> current = null;
-        BinarySearchTreeNode<E> next = root;
+    // get the node with data passed in
+    private BinarySearchTreeNode<E> findNode(E data) {
+        BinarySearchTreeNode<E> current = root;
 
-        while (next != null) {
-            current = next;
+        while (current != null && !current.getData().equals(data)) {
             if (data.compareTo(current.getData()) == -1)
-                next = current.getLeft();
+                current = current.getLeft();
             else
-                next = current.getRight();
+                current = current.getRight();
         }
         return current;
     }
 
-    // get the parent of the node with the data passed in
-    private BinarySearchTreeNode<E> getParent(E childData) {
+    // get the parent of the node with data passed in
+    private BinarySearchTreeNode<E> findParent(E childData) {
         BinarySearchTreeNode<E> parent = null;
         BinarySearchTreeNode<E> current = root;
 
@@ -76,7 +74,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     private void insertWithoutBalancing(E data) {
         BinarySearchTreeNode<E> toInsert = new BinarySearchTreeNode<>(data);
         if (root != null) {
-            BinarySearchTreeNode<E> parent = findPlace(data);
+            BinarySearchTreeNode<E> parent = findParent(data);
 
             if (toInsert.compareTo(parent) == -1)
                 parent.setLeft(toInsert);
@@ -119,7 +117,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                 else
                     root = null;
             } else {
-                BinarySearchTreeNode<E> parent = getParent(data);
+                BinarySearchTreeNode<E> parent = findParent(data);
 
                 if (data.compareTo(parent.getData()) == -1) {
                     BinarySearchTreeNode<E> toDelete = parent.getLeft();
