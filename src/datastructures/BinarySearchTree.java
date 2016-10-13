@@ -38,6 +38,22 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return current;
     }
 
+    // finds the parent that the node should be a child of
+    private BinarySearchTreeNode<E> findPlace(E data) {
+        BinarySearchTreeNode<E> current = null;
+        BinarySearchTreeNode<E> next = root;
+
+        while (next != null) {
+            current = next;
+            if (data.compareTo(current.getData()) == -1)
+                next = current.getLeft();
+            else
+                next = current.getRight();
+
+        }
+        return current;
+    }
+
     // get the parent of the node with data passed in
     private BinarySearchTreeNode<E> findParent(E childData) {
         BinarySearchTreeNode<E> parent = null;
@@ -74,7 +90,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     private void insertWithoutBalancing(E data) {
         BinarySearchTreeNode<E> toInsert = new BinarySearchTreeNode<>(data);
         if (root != null) {
-            BinarySearchTreeNode<E> parent = findParent(data);
+            BinarySearchTreeNode<E> parent = findPlace(data);
 
             if (toInsert.compareTo(parent) == -1)
                 parent.setLeft(toInsert);
@@ -104,42 +120,24 @@ public class BinarySearchTree<E extends Comparable<E>> {
     private void deleteWithoutBalancing(E data) {
         if (root != null) {
             // if root is to be deleted
-            if (root.getData().equals(data)) {
-                BinarySearchTreeNode<E> toDelete = root;
+            BinarySearchTreeNode<E> toDelete;
+            if (root.getData().equals(data))
+                toDelete = root;
+            else
+                toDelete = findNode(data);
 
-                if (root.getLeft() != null) {
-                    root = toDelete.getLeft();
-                    if (root.getRight() != null)
-                        insertWithoutBalancing(getSortedList(toDelete.getRight()));
+            BinarySearchTreeNode<E> rightmostParent = toDelete;
+            BinarySearchTreeNode<E> rightmost = toDelete.getLeft();
 
-                } else if (root.getRight() != null)
-                    root = toDelete.getRight();
-                else
-                    root = null;
-            } else {
-                BinarySearchTreeNode<E> parent = findParent(data);
-
-                if (data.compareTo(parent.getData()) == -1) {
-                    BinarySearchTreeNode<E> toDelete = parent.getLeft();
-                    if (toDelete.getLeft() != null) {
-                        parent.setLeft(toDelete.getLeft());
-                        if (toDelete.getRight() != null)
-                            insertWithoutBalancing(getSortedList(toDelete.getRight()));
-                    } else if (toDelete.getRight() != null)
-                        parent.setLeft(toDelete.getRight());
-                    else
-                        parent.setLeft(null);
-                } else {
-                    BinarySearchTreeNode<E> toDelete = parent.getRight();
-                    if (toDelete.getLeft() != null) {
-                        parent.setRight(toDelete.getLeft());
-                        if (toDelete.getRight() != null)
-                            insertWithoutBalancing(getSortedList(toDelete.getRight()));
-                    } else if (toDelete.getRight() != null)
-                        parent.setRight(toDelete.getRight());
-                    else
-                        parent.setRight(null);
+            if (rightmost == null)
+                toDelete.setData(null);
+            else {
+                while (rightmost.getRight() != null) {
+                    rightmostParent = rightmost;
+                    rightmost = rightmost.getRight();
                 }
+                toDelete.setData(rightmost.getData());
+                rightmostParent.setRight(rightmost.getLeft());
             }
         }
     }
