@@ -99,6 +99,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         balance();
     }
 
+    // TODO: fix delete
     private void deleteWithoutBalancing(E data) {
         if (root != null) {
             // if root is to be deleted
