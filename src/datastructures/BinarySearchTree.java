@@ -54,24 +54,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return current;
     }
 
-    // get the parent of the node with data passed in
-    private BinarySearchTreeNode<E> findParent(E childData) {
-        BinarySearchTreeNode<E> parent = null;
-        BinarySearchTreeNode<E> current = root;
-
-        while (!childData.equals(current.getData())) {
-            parent = current;
-            if (childData.compareTo(current.getData()) == -1)
-                current = current.getLeft();
-            else
-                current = current.getRight();
-
-            if (current == null)
-                return null;
-        }
-        return parent;
-    }
-
     public void insert(Iterable<E> data) {
         insertWithoutBalancing(data);
         balance();
