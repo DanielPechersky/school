@@ -19,11 +19,11 @@ public class QuadTreeTest {
     }
 
     public static void main(String[] args) {
-        QuadTree<Boolean> tree = fromFile("src/quad.dat");
+        QuadTree<Boolean> tree = fromFile(args[0]);
 
         System.out.println(tree.toString());
 
-        Boolean[][] array = new Boolean[8][8];
+        Boolean[][] array = new Boolean[tree.getSize()][tree.getSize()];
         tree.fillArray(array);
 
         for (Boolean[] row : array) {

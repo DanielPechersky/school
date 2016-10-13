@@ -85,6 +85,8 @@ public class QuadTree<E> {
         return array;
     }
 
+    public int getSize() { return size; }
+
     public void fillArray(Object[][] array) {
         fillArray(array, root, size);
     }
