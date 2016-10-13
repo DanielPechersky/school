@@ -25,6 +25,24 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return sortedList;
     }
 
+    // get the parent of the node with data passed in
+    private BinarySearchTreeNode<E> findParent(E childData) {
+        BinarySearchTreeNode<E> parent = null;
+        BinarySearchTreeNode<E> current = root;
+
+        while (!childData.equals(current.getData())) {
+            parent = current;
+            if (childData.compareTo(current.getData()) == -1)
+                current = current.getLeft();
+            else
+                current = current.getRight();
+
+            if (current == null)
+                return null;
+        }
+        return parent;
+    }
+
     // get the node with data passed in
     private BinarySearchTreeNode<E> findNode(E data) {
         BinarySearchTreeNode<E> current = root;
@@ -99,28 +117,53 @@ public class BinarySearchTree<E extends Comparable<E>> {
         balance();
     }
 
-    // TODO: fix delete
     private void deleteWithoutBalancing(E data) {
         if (root != null) {
             // if root is to be deleted
             BinarySearchTreeNode<E> toDelete;
+
             if (root.getData().equals(data))
                 toDelete = root;
             else
                 toDelete = findNode(data);
 
-            BinarySearchTreeNode<E> rightmostParent = toDelete;
-            BinarySearchTreeNode<E> rightmost = toDelete.getLeft();
+            if (toDelete.isLeaf())  // if toDelete has no children
+                if (toDelete == root)
+                    root = null;
+                else {
+                    BinarySearchTreeNode<E> parent = findParent(toDelete.getData());
+                    if (toDelete.getData().compareTo(parent.getData()) == -1)
+                        parent.setLeft(null);
+                    else
+                        parent.setRight(null);
+                }
+            else if (toDelete.getLeft() != null ^ toDelete.getRight() != null) {  // if toDelete has 1 child
+                BinarySearchTreeNode<E> toReplace;
+                if (toDelete.getLeft() != null)
+                    toReplace = toDelete.getLeft();
+                else
+                    toReplace = toDelete.getRight();
 
-            if (rightmost == null)
-                toDelete.setData(null);
-            else {
-                while (rightmost.getRight() != null) {
-                    rightmostParent = rightmost;
-                    rightmost = rightmost.getRight();
+                BinarySearchTreeNode<E> parent = findParent(toDelete.getData());
+                if (toDelete.getData().compareTo(parent.getData()) == -1)
+                    parent.setLeft(toReplace);
+                else
+                    parent.setRight(toReplace);
+            } else {  // if toDelete has 2 children
+                BinarySearchTreeNode<E> rightmost = toDelete.getLeft();  // rightmost node on the left
+
+                if (rightmost.getRight() == null) {
+                    toDelete.setLeft(rightmost.getLeft());
+                } else {
+                    BinarySearchTreeNode<E> rightmostParent = toDelete;
+
+                    while (rightmost.getRight() != null) {
+                        rightmostParent = rightmost;
+                        rightmost = rightmost.getRight();
+                    }
+                    rightmostParent.setRight(rightmost.getLeft());
                 }
                 toDelete.setData(rightmost.getData());
-                rightmostParent.setRight(rightmost.getLeft());
             }
         }
     }
