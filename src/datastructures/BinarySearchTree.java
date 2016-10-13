@@ -72,6 +72,12 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return current;
     }
 
+    public LinkedList<E> getSortedList() {
+        if (root != null)
+            return getSortedList(root);
+        return null;
+    }
+
     public void insert(Iterable<E> data) {
         insertWithoutBalancing(data);
         balance();
@@ -98,12 +104,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
                 parent.setRight(toInsert);
         } else
             root = toInsert;
-    }
-
-    public LinkedList<E> getSortedList() {
-        if (root != null)
-            return getSortedList(root);
-        return null;
     }
 
     public void delete(Iterable<E> data) {
@@ -137,7 +137,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                     else
                         parent.setRight(null);
                 }
-            else if (toDelete.getLeft() != null ^ toDelete.getRight() != null) {  // if toDelete has 1 child
+            else if (toDelete.getLeft() != null^toDelete.getRight() != null) {  // if toDelete has 1 child
                 BinarySearchTreeNode<E> toReplace;
                 if (toDelete.getLeft() != null)
                     toReplace = toDelete.getLeft();
