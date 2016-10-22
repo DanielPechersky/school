@@ -1,9 +1,10 @@
 import datastructures.QuadTree;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class QuadTreeTest {
     public static void main(String[] args) {
@@ -23,9 +24,9 @@ public class QuadTreeTest {
 
     @SuppressWarnings("unchecked")
     private static QuadTree<Boolean> fromFile(String filePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            return new QuadTree<>(br.lines()
-                    .map(s -> Arrays.stream(s.split(","))
+        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+            return new QuadTree<>(
+                    lines.map(s -> Arrays.stream(s.split(","))
                             .map(Boolean::parseBoolean).toArray(Boolean[]::new))
                     .toArray(Boolean[][]::new));
         } catch (IOException e) {
