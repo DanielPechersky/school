@@ -15,11 +15,9 @@ public class QuadTreeTest {
         Boolean[][] array = new Boolean[tree.getSize()][tree.getSize()];
         tree.fillArray(array);
 
-        for (Boolean[] row : array) {
-            for (Boolean bool : row)
-                System.out.print(bool+" ");
-            System.out.println();
-        }
+
+        for (Boolean[] row : array)
+            System.out.println(Arrays.deepToString(row));
 
         System.out.println(tree.toDepthString());
     }
