@@ -20,6 +20,8 @@ public class QuadTreeTest {
                 System.out.print(bool+" ");
             System.out.println();
         }
+
+        System.out.println(tree.toDepthString());
     }
 
     @SuppressWarnings("unchecked")

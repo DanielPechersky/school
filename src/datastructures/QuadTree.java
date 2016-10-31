@@ -1,6 +1,8 @@
 package datastructures;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class QuadTree<E> {
     private int size;
@@ -97,5 +99,32 @@ public class QuadTree<E> {
         } catch (NullPointerException ignored) {
             return "()";
         }
+    }
+
+    private static <E> String nodeToString(QuadTreeNode<E> node) {
+        if (!node.isLeaf())
+            return "null";
+        return node.getData().toString();
+    }
+
+    public String toDepthString() {
+        LinkedList<List<QuadTreeNode<E>>> levels = new LinkedList<>();
+
+        List<QuadTreeNode<E>> current = new LinkedList<>();
+        current.add(root);
+
+        while (!current.isEmpty()) {
+            levels.add(current);
+            LinkedList<QuadTreeNode<E>> next = new LinkedList<>();
+            current.stream()
+                    .filter(node -> !node.isLeaf())
+                    .forEach(node -> next.addAll(Arrays.asList(node.getChildren())));
+            current = next;
+        }
+
+        return String.join("\n", (Iterable<String>) levels.stream()
+                .map(line -> String.join(" ", (Iterable<String>) line.stream()
+                        .map(QuadTree::nodeToString)::iterator))
+                ::iterator);
     }
 }
