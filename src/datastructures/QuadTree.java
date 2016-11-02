@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class QuadTree<E> {
-    private int size;
+    protected final int size;
     private QuadTreeNode<E> root;
 
     public QuadTree(E[][] data) {
@@ -16,6 +16,10 @@ public class QuadTree<E> {
 
         size = data.length;
         root = build(data);
+    }
+
+    protected QuadTreeNode<E> getRoot() {
+        return root;
     }
 
     private static <E> QuadTreeNode<E> build(E[][] data) {

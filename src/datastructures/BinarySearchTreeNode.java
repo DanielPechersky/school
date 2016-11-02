@@ -3,21 +3,21 @@ package datastructures;
 class BinarySearchTreeNode<E extends Comparable<E>> extends Node<E> implements Comparable<BinarySearchTreeNode<E>> {
     private BinarySearchTreeNode<E> left, right;
 
-    BinarySearchTreeNode(E data) {
+    public BinarySearchTreeNode(E data) {
         super(data);
         left = null;
         right = null;
     }
 
-    BinarySearchTreeNode<E> getLeft() { return left; }
+    public BinarySearchTreeNode<E> getLeft() { return left; }
 
-    void setLeft(BinarySearchTreeNode<E> left) { this.left = left; }
+    public void setLeft(BinarySearchTreeNode<E> left) { this.left = left; }
 
-    BinarySearchTreeNode<E> getRight() { return right; }
+    public BinarySearchTreeNode<E> getRight() { return right; }
 
-    void setRight(BinarySearchTreeNode<E> right) { this.right = right; }
+    public void setRight(BinarySearchTreeNode<E> right) { this.right = right; }
 
-    boolean isLeaf() {
+    public boolean isLeaf() {
         return left == null && right == null;
     }
 

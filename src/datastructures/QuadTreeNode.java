@@ -5,43 +5,43 @@ import java.util.Arrays;
 public class QuadTreeNode<E> extends Node<E> {
     private QuadTreeNode<E>[] children;
 
-    QuadTreeNode(E data) {
+    public QuadTreeNode(E data) {
         super(data);
         instantiateChildrenArray();
     }
 
     @SuppressWarnings("unchecked")
-    private void instantiateChildrenArray() {
+    public void instantiateChildrenArray() {
         children = (QuadTreeNode<E>[]) new QuadTreeNode[4];
         clearChildren();
     }
 
-    void clearChildren() {
+    public void clearChildren() {
         Arrays.fill(children, null);
     }
 
-    QuadTreeNode(QuadTreeNode<E> NW, QuadTreeNode<E> NE, QuadTreeNode<E> SE, QuadTreeNode<E> SW) {
+    public QuadTreeNode(QuadTreeNode<E> NW, QuadTreeNode<E> NE, QuadTreeNode<E> SE, QuadTreeNode<E> SW) {
         super(null);
         instantiateChildrenArray();
         setChildren(NW, NE, SE, SW);
     }
 
-    void setChildren(QuadTreeNode<E> NW, QuadTreeNode<E> NE, QuadTreeNode<E> SE, QuadTreeNode<E> SW) {
+    public void setChildren(QuadTreeNode<E> NW, QuadTreeNode<E> NE, QuadTreeNode<E> SE, QuadTreeNode<E> SW) {
         children[0] = NW;
         children[1] = NE;
         children[2] = SE;
         children[3] = SW;
     }
 
-    QuadTreeNode<E>[] getChildren() {
+    public QuadTreeNode<E>[] getChildren() {
         return children.clone();
     }
 
-    boolean equals(QuadTreeNode<E> node) {
+    public boolean equals(QuadTreeNode<E> node) {
         return isLeaf() && node.isLeaf() && getData().equals(node.getData());
     }
 
-    boolean isLeaf() {
+    public boolean isLeaf() {
         return getData() != null;
     }
 
