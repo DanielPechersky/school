@@ -1,6 +1,6 @@
 package datastructures;
 
-class BinarySearchTreeNode<E extends Comparable<E>> extends Node<E> implements Comparable<BinarySearchTreeNode<E>> {
+public class BinarySearchTreeNode<E extends Comparable<E>> extends Node<E> implements Comparable<BinarySearchTreeNode<E>> {
     private BinarySearchTreeNode<E> left, right;
 
     public BinarySearchTreeNode(E data) {
