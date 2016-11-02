@@ -1,5 +1,3 @@
-package datastructures;
-
 import java.util.Arrays;
 
 public class QuadTreeNode<E> extends Node<E> {

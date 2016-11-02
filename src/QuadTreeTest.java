@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class QuadTreeTest {
     public static void main(String[] args) {
         // identical to QuadTree, except can also be displayed with swing
-        GraphicQuadTree<Boolean> tree = new GraphicQuadTree<>(fromFile(args[0]));
+        GraphicQuadTree<Boolean> tree = new GraphicQuadTree<>(fromFile("quad.dat"));
 
         Boolean[][] array = new Boolean[tree.getSize()][tree.getSize()];
         tree.fillArray(array);

@@ -1,6 +1,3 @@
-import datastructures.QuadTree;
-import datastructures.QuadTreeNode;
-
 import javax.swing.*;
 import java.awt.*;
 

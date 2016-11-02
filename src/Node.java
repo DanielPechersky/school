@@ -1,5 +1,3 @@
-package datastructures;
-
 public abstract class Node<E> {
     private E data;
 
