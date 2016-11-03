@@ -9,7 +9,7 @@ public class QuadTree<E> {
     public QuadTree(E[][] data) {
         if (data.length != data[0].length)
             throw new IllegalArgumentException("QuadTree needs an array with equal sides");
-        if ((data.length&-data.length) != data[0].length || (data[0].length&-data[0].length) != data[0].length)
+        if ((data.length&-data.length) != data.length || (data[0].length&-data[0].length) != data[0].length)
             throw new IllegalArgumentException("Sides must be power of 2");
 
         size = data.length;
@@ -21,21 +21,22 @@ public class QuadTree<E> {
     }
 
     private static <E> QuadTreeNode<E> build(E[][] data) {
-        return build(data, 0, data.length, 0, data[0].length);
+        return build(data, data.length, 0, 0);
     }
 
-    private static <E> QuadTreeNode<E> build(E[][] data, int fromRowIndex, int toRowIndex, int fromColumnIndex, int toColumnIndex) {
-        if (toRowIndex-fromRowIndex == 1)
+    private static <E> QuadTreeNode<E> build(E[][] data, int size, int fromRowIndex, int fromColumnIndex) {
+        if (size == 1)
             return new QuadTreeNode<>(data[fromRowIndex][fromColumnIndex]);
 
-        int centerRowIndex = fromRowIndex+(toRowIndex-fromRowIndex)/2;
-        int centerColumnIndex = fromColumnIndex+(toColumnIndex-fromColumnIndex)/2;
+        int nextSquareSize = size/2;
+        int centerRowIndex = fromRowIndex+nextSquareSize;
+        int centerColumnIndex = fromColumnIndex+nextSquareSize;
 
         QuadTreeNode<E> result = new QuadTreeNode<>(
-                build(data, fromRowIndex, centerRowIndex, fromColumnIndex, centerColumnIndex),
-                build(data, fromRowIndex, centerRowIndex, centerColumnIndex, toColumnIndex),
-                build(data, centerRowIndex, toRowIndex, centerColumnIndex, toColumnIndex),
-                build(data, centerRowIndex, toRowIndex, fromColumnIndex, centerColumnIndex));
+                build(data, nextSquareSize, fromRowIndex, fromColumnIndex),
+                build(data, nextSquareSize, fromRowIndex, centerColumnIndex),
+                build(data, nextSquareSize, centerRowIndex, centerColumnIndex),
+                build(data, nextSquareSize, centerRowIndex, fromColumnIndex));
 
         killChildrenIfNecessary(result);
         return result;
