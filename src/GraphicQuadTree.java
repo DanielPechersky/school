@@ -52,7 +52,7 @@ class GraphicQuadTree<E extends Boolean> extends QuadTree<E> {
     }
 
     private JPanel makeSquare(boolean val) {
-        JPanel result = new JPanel(new FlowLayout(FlowLayout.CENTER, 1, 1));
+        JPanel result = new JPanel();
         result.setBackground(val ? TRUE_COLOR : FALSE_COLOR);
         result.setBorder(BorderFactory.createLineBorder(val ? FALSE_COLOR : TRUE_COLOR));
         return result;
