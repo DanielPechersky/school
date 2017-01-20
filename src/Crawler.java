@@ -44,7 +44,7 @@ public class Crawler {
 
     private static LinkedList<String> crawlURL(String urlString) throws IOException {
         try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlString.concat("/robots.txt")).openStream()))) {
-
+            // TODO: Read bots.txt
         }
 
         try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlString).openStream()))) {
