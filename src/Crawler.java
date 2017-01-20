@@ -2,7 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,34 +16,47 @@ public class Crawler {
         this.toSearch = toSearch;
     }
 
-    public LinkedList<String> crawl(int count) {
-        LinkedList<String> toRead = new LinkedList<>();
-        toRead.add(toSearch);
-        LinkedList<String> hasRead = new LinkedList<>();
+    public ArrayList<String> crawl(int count) {
+        final LinkedList<String> toRead = new LinkedList<>();
+        final ArrayList<String> hasRead = new ArrayList<>(count);
 
-        for (int i=0; toRead.isEmpty() || i<count; i++) {
-            String currentURLString=toRead.pop();
-            while (!hasRead.contains(currentURLString))
-                currentURLString=toRead.pop();
+        String currentURLString = toSearch;
+        try {
+            for (int i=0; i<count; ++i) {
+                boolean done=false;
+                while (!done)
+                    try {
+                        toRead.addAll(0, crawlURL(currentURLString));
+                        hasRead.add(currentURLString);
+                        done=true;
+                    } catch(IOException e) {
+                    } finally {
+                        currentURLString = toRead.pop();
+                        while (hasRead.contains(currentURLString))
+                            currentURLString = toRead.pop();
+                    }
+            }
+            hasRead.add(toRead.pop());
+        } catch(NoSuchElementException e) {}
 
-            hasRead.add(currentURLString);
-            toRead.addAll(crawlURL(currentURLString).collect(Collectors.toCollection(LinkedList::new)));
-        }
-
-        hasRead.add(toRead.pop());
         return hasRead;
     }
 
-    private static Stream<String> crawlURL(String urlString) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlString).openStream()))) {
-            return br.lines().flatMap(Crawler::urlStringsFromLine);
-        } catch(IOException e) {
-            return null;
+    private static LinkedList<String> crawlURL(String urlString) throws IOException {
+        try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlString.concat("/robots.txt")).openStream()))) {
+
+        }
+
+        try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlString).openStream()))) {
+            return br.lines()
+                    .flatMap(Crawler::urlsFromLine)
+                    .collect(Collectors.toCollection(LinkedList::new));
         }
     }
 
-    private static Stream<String> urlStringsFromLine(String line) {
+    private static Stream<String> urlsFromLine(String line) {
         return Arrays.stream(line.split("href=\""))
+                .skip(1)
                 .map(section -> section.substring(0, section.indexOf('"')));
     }
 }
