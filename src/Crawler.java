@@ -2,61 +2,83 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Crawler {
-    private final String toSearch;
+    private final LinkedList<String> toRead;
+    private final Deque<String> hasRead;
 
-    public Crawler(String toSearch) {
-        this.toSearch = toSearch;
+    private final HashMap<String, Boolean> cachedRobotsTxt;
+
+    public Crawler(List<String> toRead) {
+        this.toRead = new LinkedList<>(toRead);
+        hasRead = new LinkedList<>();
+
+        cachedRobotsTxt = new HashMap<>();
     }
 
-    public ArrayList<String> crawl(int count) {
-        final LinkedList<String> toRead = new LinkedList<>();
-        final ArrayList<String> hasRead = new ArrayList<>(count);
-
-        String currentURLString = toSearch;
+    public void crawl(int count) {
         try {
             for (int i=0; i<count; ++i) {
-                boolean done=false;
-                while (!done)
+                while (true)
                     try {
-                        toRead.addAll(0, crawlURL(currentURLString));
-                        hasRead.add(currentURLString);
-                        done=true;
-                    } catch(IOException e) {
-                    } finally {
-                        currentURLString = toRead.pop();
-                        while (hasRead.contains(currentURLString))
-                            currentURLString = toRead.pop();
-                    }
+                        crawlURL(toRead.pop());
+                        break;
+                    } catch(IOException e) {}
             }
-            hasRead.add(toRead.pop());
         } catch(NoSuchElementException e) {}
-
-        return hasRead;
     }
 
-    private static LinkedList<String> crawlURL(String urlString) throws IOException {
-        try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlString.concat("/robots.txt")).openStream()))) {
-            // TODO: Read bots.txt
-        }
+    private void crawlURL(String urlString) throws IOException {
+        hasRead.add(urlString);
+        final URL url = new URL(urlString);
 
-        try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(urlString).openStream()))) {
-            return br.lines()
-                    .flatMap(Crawler::urlsFromLine)
-                    .collect(Collectors.toCollection(LinkedList::new));
-        }
+        if (isCrawlAllowed(url))
+            try (final BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                toRead.addAll(br.lines()
+                        .flatMap(this::urlsFromLine)
+                        .filter(urlString_ -> !hasRead.contains(urlString_) && !toRead.contains(urlString_))
+                        .collect(Collectors.toCollection(LinkedList::new)));
+            }
+        else
+            throw new CrawlNotAllowedException(urlString);
     }
 
-    private static Stream<String> urlsFromLine(String line) {
+    private Stream<String> urlsFromLine(String line) {
         return Arrays.stream(line.split("href=\""))
                 .skip(1)
                 .map(section -> section.substring(0, section.indexOf('"')));
+    }
+
+    private boolean isCrawlAllowed(URL url) {
+        return isCrawlAllowed(url.getProtocol(), url.getHost());
+    }
+
+    private boolean isCrawlAllowed(String protocol, String host) {
+        final Boolean isAllowed = cachedRobotsTxt.get(host);
+        if (isAllowed == null) {
+            try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(protocol, host, "robots.txt").openStream()))) {
+                String line;
+                while (!br.readLine().equalsIgnoreCase("user-agent: *"));
+
+                while (!(line = br.readLine()).equals(""))
+                    if (line.matches("disallow: \\S*")) {
+                        cachedRobotsTxt.put(host, false);
+                        return false;
+                    }
+            } catch (NullPointerException | IOException e) {}
+
+            cachedRobotsTxt.put(host, true);
+            return true;
+        } else
+            return isAllowed;
+    }
+
+    private class CrawlNotAllowedException extends IOException {
+        CrawlNotAllowedException(String host) {
+            super("Crawling not allowed for host: "+host);
+        }
     }
 }
