@@ -1,5 +1,6 @@
 public class CrawlerTest {
     public static void main(String[] args) {
-        // System.out.println(new Crawler(Arrays.asList(args)).crawl(10));
+        Crawler crawler = new Crawler(args[0].split(","), args[1].split(","));
+        System.out.println(crawler.crawl(10));
     }
 }
