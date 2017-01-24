@@ -15,7 +15,6 @@ public class Crawler {
 
     public Crawler(String[] fileTypesSeeking, String... toRead) {
         this(Arrays.asList(fileTypesSeeking), Arrays.asList(toRead));
-
     }
 
     public Crawler(Collection<String> fileTypesSeeking, List<String> toRead) {
