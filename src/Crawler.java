@@ -7,19 +7,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Crawler {
-    private final List<String> filetypesSeeking;
+    private final List<String> fileTypesSeeking;
     private final LinkedList<URL> toRead;
     private final List<URL> hasRead;
 
     private final HashMap<String, Boolean> cachedRobotsTxt;
 
-    public Crawler(String[] filetypesSeeking, String... toRead) {
-        this(Arrays.asList(filetypesSeeking), Arrays.asList(toRead));
+    public Crawler(String[] fileTypesSeeking, String... toRead) {
+        this(Arrays.asList(fileTypesSeeking), Arrays.asList(toRead));
 
     }
 
-    public Crawler(Collection<String> filetypesSeeking, List<String> toRead) {
-        this.filetypesSeeking = new LinkedList<>(filetypesSeeking);
+    public Crawler(Collection<String> fileTypesSeeking, List<String> toRead) {
+        this.fileTypesSeeking = new LinkedList<>(fileTypesSeeking);
         this.toRead = toRead.stream()
                 .map(urlString -> {
                     try {
@@ -47,39 +47,46 @@ public class Crawler {
     }
 
     private String crawlURL(URL url) {
-        System.out.println(url);
+        System.out.print(url);
         hasRead.add(url);
         if (url.getPath().contains(".") &&
-                filetypesSeeking.contains(url.getPath().substring(url.getPath().indexOf('.')+1)))
+                fileTypesSeeking.contains(url.getPath().substring(url.getPath().indexOf('.')+1))) {
+            System.out.println(" +added");
             return url.toString();
+        }
+
+        System.out.println();
 
         try {
             if (isCrawlAllowed(url)) {
                 try (final BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-                    toRead.addAll(
-                            Arrays.stream(
+                    toRead.addAll(Arrays.stream(
                             br.lines()
-                            .collect(Collectors.joining())
-                            .split("href=\"")
-                            )
+                                    .collect(Collectors.joining())
+                                    .split("href=\"")
+                    )
                             .skip(1)
                             .map(section -> section.substring(0, section.indexOf('"')))
                             .map(urlString -> {
                                 try {
                                     return new URL(url, urlString);
-                                } catch(MalformedURLException e) {
+                                } catch (MalformedURLException e) {
                                     return null;
                                 }
                             })
                             .filter(Objects::nonNull)
-                            .filter(url_ -> !hasRead.contains(url_) && !toRead.contains(url_))
+                            .filter(this::shouldReadIfAllowed)
                             .collect(Collectors.toList()));
                 }
             }
 
-        } catch(IOException e) {}
+        } catch (IOException e) {}
 
         return null;
+    }
+
+    private boolean shouldReadIfAllowed(URL url) {
+        return !hasRead.contains(url) && !toRead.contains(url);
     }
 
     private boolean isCrawlAllowed(URL url) {
