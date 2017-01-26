@@ -36,7 +36,7 @@ public class Crawler {
     public ArrayList<String> crawl(int count) {
         ArrayList<String> results = new ArrayList<>(count);
         try {
-            while (results.size() < count) {
+            while (hasRead.size() < count) {
                 String result = crawlURL(toRead.pop());
                 if (result != null)
                     results.add(result);
