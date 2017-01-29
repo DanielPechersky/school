@@ -95,7 +95,7 @@ public class Crawler {
     private boolean isCrawlAllowed(String protocol, String host) {
         final Boolean isAllowed = cachedRobotsTxt.get(host);
         if (isAllowed == null) {
-            try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(protocol, host, "robots.txt").openStream()))) {
+            try (final BufferedReader br = new BufferedReader(new InputStreamReader(new URL(protocol, host, "/robots.txt").openStream()))) {
                 String line;
                 while (!br.readLine().equalsIgnoreCase("user-agent: *"));
 
