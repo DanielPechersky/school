@@ -100,7 +100,7 @@ public class Crawler {
                 while (!br.readLine().equalsIgnoreCase("user-agent: *"));
 
                 while (!(line = br.readLine()).equals(""))
-                    if (line.matches("disallow: \\S*")) {
+                    if (line.matches("(?i)disallow: \\S*")) {
                         cachedRobotsTxt.put(host, false);
                         return false;
                     }
