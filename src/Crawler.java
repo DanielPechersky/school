@@ -35,8 +35,7 @@ public class Crawler {
         cachedRobotsTxt = new HashMap<>();
     }
 
-    public ArrayList<String> crawl(int count) {
-        ArrayList<String> results = new ArrayList<>(count);
+    public LinkedList<String> crawl(int count) {
         try {
             while (hasRead.size() < count)
                 crawlURL(toRead.pop(), count);
