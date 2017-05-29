@@ -17,10 +17,10 @@ public class PathFinderTest {
         for (int[] row : paths)
             Arrays.fill(row, -1);
 
-        for (int i=0; i<paths_unparsed.length; i++) {
-            int p1 = paths_unparsed[i][0];
-            int p2 = paths_unparsed[i][1];
-            int cost = paths_unparsed[i][2];
+        for (int[] aPaths_unparsed : paths_unparsed) {
+            int p1 = aPaths_unparsed[0];
+            int p2 = aPaths_unparsed[1];
+            int cost = aPaths_unparsed[2];
             paths[p1][p2] = cost;
             paths[p2][p1] = cost;
         }
