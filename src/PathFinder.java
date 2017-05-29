@@ -16,28 +16,24 @@ public class PathFinder {
             this.cost = cost;
         }
 
-        protected Path(int start, int end, int cost) {
+        Path(int start, int end, int cost) {
             nodes = new LinkedList<>();
             nodes.add(start);
             nodes.add(end);
             this.cost = cost;
         }
 
-        protected Path add(int node, int cost) {
+        Path add(int node, int cost) {
             LinkedList<Integer> new_nodes = new LinkedList<>(nodes);
             new_nodes.add(node);
             return new Path(new_nodes, this.cost + cost);
         }
 
-        protected Path clone() {
-            return new Path(nodes, cost);
-        }
-
-        protected int end() {
+        int end() {
             return nodes.getLast();
         }
 
-        protected ArrayList<Integer> toList() {
+        ArrayList<Integer> toList() {
             return new ArrayList<>(nodes);
         }
 
