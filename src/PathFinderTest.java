@@ -30,6 +30,9 @@ public class PathFinderTest {
                 .toArray();
 
         ArrayList<Integer> path = new PathFinder(paths).dikstra(start_and_end[0], start_and_end[1]);
-        System.out.println(Arrays.deepToString(path.toArray()));
+
+        System.out.println(path != null ?
+                Arrays.deepToString(path.toArray()) :
+                "no path");
     }
 }
