@@ -60,11 +60,12 @@ public class PathFinder {
 
         Path p = queue.poll();
         while (!queue.isEmpty()) {
+            if (p.end() == end)
+                return p.toList();
+
             visited.add(p.end());
             for (int i=0; i<paths.length; i++)
                 if (paths[p.end()][i] != -1 && !visited.contains(i)) {
-                    if (i == end)
-                        return p.add(i, paths[p.end()][i]).toList();
                     queue.add(p.add(i, paths[p.end()][i]));
                 }
             p = queue.poll();
