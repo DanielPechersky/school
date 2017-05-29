@@ -5,7 +5,7 @@ public class PathFinderTest {
 
     public static void main(String[] args) {
         int[][] paths_unparsed = Arrays.stream(args)
-                .skip(2)
+                .skip(1)
                 .map(path -> Arrays.stream(path.split(",")).mapToInt(Integer::parseInt).toArray())
                 .toArray(int[][]::new);
 
@@ -25,7 +25,11 @@ public class PathFinderTest {
             paths[p2][p1] = cost;
         }
 
-        ArrayList<Integer> path = new PathFinder(paths).dikstra(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+        int[] start_and_end = Arrays.stream(args[0].split(","))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        ArrayList<Integer> path = new PathFinder(paths).dikstra(start_and_end[0], start_and_end[1]);
         System.out.println(Arrays.deepToString(path.toArray()));
     }
 }
