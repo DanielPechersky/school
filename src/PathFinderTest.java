@@ -6,7 +6,9 @@ public class PathFinderTest {
     public static void main(String[] args) {
         int[][] paths_unparsed = Arrays.stream(args)
                 .skip(1)
-                .map(path -> Arrays.stream(path.split(",")).mapToInt(Integer::parseInt).toArray())
+                .map(path -> Arrays.stream(path.split(","))
+                        .mapToInt(Integer::parseInt)
+                        .toArray())
                 .toArray(int[][]::new);
 
         int highest_node = 0;
